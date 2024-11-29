@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { useAccount, useWriteContract } from "wagmi";
 import { useMessageModal } from "../context/MessageModalContext";
+import { SIGSAFE_FACTORY } from "../utils/sigsafe-factory";
+import { ethers } from "ethers";
+import { useLoader } from "../context/LoaderContext";
 
 const CreateWalletPage: React.FC = () => {
     const [signatories, setSignatories] = useState<string[]>([""]);
@@ -10,6 +13,7 @@ const CreateWalletPage: React.FC = () => {
     const account = useAccount();
     const { writeContractAsync } = useWriteContract();
     const { showMessage } = useMessageModal();
+    const { startLoading, stopLoading } = useLoader();
 
     const addSignatory = () => {
         setSignatories([...signatories, ""]);
@@ -41,14 +45,34 @@ const CreateWalletPage: React.FC = () => {
             return;
         }
 
-        try {
-            // Implement actual wallet creation logic here
-            // For example:
-            // const result = await writeContractAsync(...);
+        startLoading();
 
-            showMessage("Multi-signature wallet created successfully!", "success", "Wallet Created");
-        } catch (error) {
-            showMessage("Failed to create wallet. Please try again.", "error", "Creation Error");
+        try {
+            const formattedSignatories = signatories.map((sig: any) => {
+                const formatted = `0x${String(sig).substring(2)}`;
+                if (!ethers.isAddress(formatted)) {
+                    throw new Error(`Invalid address: ${formatted}`);
+                }
+                return formatted as `0x${string}`;
+            });
+
+            const result = await writeContractAsync({
+                abi: SIGSAFE_FACTORY,
+                address: `0x${import.meta.env.VITE_PUBLIC_SIGSAFE_FACTORY_BASE_SEPOLIA as string}`,
+                account: account.address,
+                functionName: "createWallet",
+                args: [BigInt(requiredApprovals), formattedSignatories],
+            });
+
+            if (result) {
+                stopLoading();
+                showMessage("Multi-signature wallet created successfully!", "success", "Wallet Created");
+
+                return;
+            }
+        } catch (error: any) {
+            showMessage("Failed to create wallet. Please try again.", error, "Creation Error");
+            stopLoading();
         }
     };
 

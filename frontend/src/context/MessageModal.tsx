@@ -33,7 +33,7 @@ const MessageModal: React.FC<MessageModalProps> = ({ isOpen, onClose, type = "in
         },
     };
 
-    const currentStyle = typeStyles[type];
+    const currentStyle = typeStyles[type] || typeStyles.info;
 
     return (
         <AnimatePresence>

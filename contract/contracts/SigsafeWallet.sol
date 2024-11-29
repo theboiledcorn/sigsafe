@@ -13,6 +13,7 @@ contract SigsafeWallet is ReentrancyGuard {
         address to;
         uint256 value;
         bytes data;
+        bytes metadata;
         bool executed;
         uint256 approvalCount;
         uint256 rejectionCount;
@@ -42,16 +43,13 @@ contract SigsafeWallet is ReentrancyGuard {
     }
 
     modifier TransactionNotExecuted(uint _transactionId) {
-        if (transaction[_transactionId].initiatedAt == 0)
-            revert SigsafeError.TransactionDoesNotExist();
-        if (transaction[_transactionId].executed == true)
-            revert SigsafeError.TransactionAlreadyExecuted();
+        if (transaction[_transactionId].initiatedAt == 0) revert SigsafeError.TransactionDoesNotExist();
+        if (transaction[_transactionId].executed == true) revert SigsafeError.TransactionAlreadyExecuted();
         _;
     }
 
     constructor(uint noOfRequiredApprovals, address[] memory _signatories) {
-        if (noOfRequiredApprovals > _signatories.length)
-            revert SigsafeError.RequiredApprovalsCantExceedSignatories();
+        if (noOfRequiredApprovals > _signatories.length) revert SigsafeError.RequiredApprovalsCantExceedSignatories();
 
         if (noOfRequiredApprovals == 0) revert SigsafeError.RequiredApprovalsCantBeZero();
 
@@ -83,7 +81,8 @@ contract SigsafeWallet is ReentrancyGuard {
     function initiateTransaction(
         address _to,
         uint256 _value,
-        bytes memory _txData
+        bytes memory _txData,
+        bytes memory _metadata
     ) external isValidSignatory {
         Transaction memory newTX = Transaction({
             transactionId: transactionCount,
@@ -93,6 +92,7 @@ contract SigsafeWallet is ReentrancyGuard {
             to: _to,
             value: _value,
             data: _txData,
+            metadata: _metadata,
             approvalCount: 0,
             rejectionCount: 0
         });
@@ -129,17 +129,10 @@ contract SigsafeWallet is ReentrancyGuard {
             transaction[_transactionId].rejectionCount++;
         }
 
-        emit SigsafeEvents.SignatoryVoted(
-            msg.sender,
-            address(this),
-            _transactionId,
-            block.timestamp
-        );
+        emit SigsafeEvents.SignatoryVoted(msg.sender, address(this), _transactionId, block.timestamp);
     }
 
-    function resetVote(
-        uint _transactionId
-    ) external isValidSignatory TransactionNotExecuted(_transactionId) {
+    function resetVote(uint _transactionId) external isValidSignatory TransactionNotExecuted(_transactionId) {
         VoteType currentSignatoryVote = signatoryVotes[_transactionId][msg.sender];
 
         if (currentSignatoryVote == VoteType.Unvoted) revert SigsafeError.NoVotesToReset();
@@ -171,9 +164,7 @@ contract SigsafeWallet is ReentrancyGuard {
             if (_transaction.to == address(0)) {
                 _transaction.executed = true;
             } else {
-                (bool txSuccess, ) = _transaction.to.call{value: _transaction.value}(
-                    _transaction.data
-                );
+                (bool txSuccess, ) = _transaction.to.call{value: _transaction.value}(_transaction.data);
 
                 if (!txSuccess) {
                     revert SigsafeError.TransactionExecutionToAddressFailed();
@@ -207,10 +198,11 @@ contract SigsafeWallet is ReentrancyGuard {
             address[] memory _signatories,
             uint _noOfApprovals,
             uint _noOfRejections,
-            uint _transactionCount
+            uint _transactionCount,
+            address _walletAddress
         )
     {
-        return (SIGNATORIES, NO_OF_REQUIRED_APPROVALS, NO_OF_REQUIRED_REJECTIONS, transactionCount);
+        return (SIGNATORIES, NO_OF_REQUIRED_APPROVALS, NO_OF_REQUIRED_REJECTIONS, transactionCount, address(this));
     }
 
     receive() external payable {
