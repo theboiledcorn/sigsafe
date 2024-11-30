@@ -19,14 +19,14 @@ createRoot(root).render(
             <div className="container mx-auto px-4 pt-6 max-w-full">
                 <StrictMode>
                     <Providers>
-                        <LoaderProvider>
-                            <MessageModalProvider>
+                        <MessageModalProvider>
+                            <LoaderProvider>
                                 <div className="flex flex-col min-h-screen pt-6">
                                     <App />
                                     <TopNavbar />
                                 </div>
-                            </MessageModalProvider>
-                        </LoaderProvider>
+                            </LoaderProvider>
+                        </MessageModalProvider>
                     </Providers>
                 </StrictMode>
             </div>

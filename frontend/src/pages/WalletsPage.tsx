@@ -13,8 +13,7 @@ const WalletsPage: React.FC = () => {
     const [userWalletsFromContract, setUserWalletsFromContract] = useState<any[] | null>(null);
     const [filteredResults, setFilteredResults] = useState<any[] | null>(null);
     const { startLoading, stopLoading } = useLoader();
-    const [noWallets, setNoWallets] = useState(false);
-    const [emptyWallets, setEmptyWallets] = useState(false);
+    const [noWallets, setNoWallets] = useState<true | false | null>(null);
 
     useEffect(() => {
         if (account.isConnected) {
@@ -25,6 +24,7 @@ const WalletsPage: React.FC = () => {
     }, [account.isConnected]);
 
     useEffect(() => {
+        console.log("loaded");
         if (!account.isConnected) {
             setNoWallets(true);
         }
@@ -43,7 +43,6 @@ const WalletsPage: React.FC = () => {
             setUserWalletsFromContract([...userWallets]);
         } else {
             setNoWallets(false);
-            setEmptyWallets(true);
         }
     }, [userWallets]);
 
@@ -91,11 +90,10 @@ const WalletsPage: React.FC = () => {
                 console.log(filteredRes);
                 setFilteredResults(filteredRes);
                 setNoWallets(false);
-                setEmptyWallets(false);
             };
 
             fetchBalances(); // Call the async function
-        } 
+        }
     }, [walletsResults]);
 
     return (
@@ -116,26 +114,13 @@ const WalletsPage: React.FC = () => {
                 </Link>
             </div>
 
-            {noWallets == true ? (
+            {noWallets === true && (
                 <div className="container mx-auto p-6 text-center">
                     <FaWallet className="mx-auto text-6xl text-soft-lilac mb-4" />
                     <p className="text-bright-purple dark:text-light-lavender">
                         You have to Sign in to view wallets.
                     </p>
                 </div>
-            ) : (
-                <></>
-            )}
-
-            {emptyWallets == true ? (
-                <div className="container mx-auto p-6 text-center">
-                    <FaWallet className="mx-auto text-6xl text-soft-lilac mb-4" />
-                    <p className="text-bright-purple dark:text-light-lavender">
-                        You haven't created any wallet yet.
-                    </p>
-                </div>
-            ) : (
-                <></>
             )}
 
             {filteredResults && filteredResults?.length === 0 ? (

@@ -1,6 +1,7 @@
 // import React from "react";
 import { BookOpenIcon, ShieldCheckIcon, UsersIcon, ClockIcon, LockIcon } from "lucide-react";
 import { Button } from "../components/Button";
+import { Link } from "react-router-dom";
 
 export default function AboutPage() {
     const featuresList = [
@@ -66,7 +67,9 @@ export default function AboutPage() {
                                         {feature.title}
                                     </h3>
                                 </div>
-                                <p className="text-light-lavender dark:text-bright-purple">{feature.description}</p>
+                                <p className="text-light-lavender dark:text-bright-purple">
+                                    {feature.description}
+                                </p>
                             </div>
                         ))}
                     </div>
@@ -123,9 +126,11 @@ export default function AboutPage() {
                 </section>
 
                 <div className="text-center">
-                    <Button className=" bg-bright-purple hover:bg-vivid-lavender text-white font-bold py-3 px-6 rounded-full text-lg transition duration-300">
-                        Get Started Now
-                    </Button>
+                    <Link to={"/create-wallet"}>
+                        <Button className=" bg-bright-purple hover:bg-vivid-lavender text-white font-bold py-3 px-6 rounded-full text-lg transition duration-300">
+                            Get Started Now
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </div>

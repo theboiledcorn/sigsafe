@@ -5,7 +5,6 @@ import { Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import CreateWalletPage from "./pages/CreateWalletPage";
 import WalletsPage from "./pages/WalletsPage";
-import { TransactionInitiatePage } from "./pages/TransactionInitiatePage";
 import { TransactionDetailsPage } from "./pages/TransactionDetailsPage";
 import AboutPage from "./pages/AboutPage";
 import { WalletDetailsPage } from "./pages/WalletDetailsPage";
@@ -20,7 +19,6 @@ const App: FC = () => {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/create-wallet" element={<CreateWalletPage />} />
                 <Route path="/wallets" element={<WalletsPage />} />
-                <Route path="/initiate-transaction" element={<TransactionInitiatePage />} />
                 <Route
                     path="/wallets/:walletId/transaction/:id"
                     element={<TransactionDetailsPage />}

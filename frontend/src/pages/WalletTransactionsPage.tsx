@@ -14,22 +14,49 @@ interface Transaction {
     executed?: boolean;
     executedAt?: bigint;
     initiatedAt?: bigint;
-    metadata?: string;
-    rejectionCount?: bigint;
+    metadata: string;
+    rejectionCount: bigint;
     to?: string;
-    transactionId?: string;
+    transactionId?: bigint;
     value: string;
 }
 
 export const WalletTransactionsPage: React.FC = () => {
     const { walletId } = useParams<{ walletId: string }>();
-    const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
+    const [filter, setFilter] = useState<"all" | "pending" | "executed" | "rejected">("all");
     const [isValidURL, setValidURL] = useState(false);
     const [walletTXCountArray, setWalletTXCountArray] = useState<number[]>([]);
     const { startLoading, stopLoading } = useLoader();
     const [finalWalletTXs, setFinalWalletTXs] = useState<Transaction[] | null>(null);
+    const [finalWalletTXsToDisplay, setFinalWalletTXsToDisplay] = useState<Transaction[] | null>(
+        null
+    );
 
     const createArray = (num: number) => Array.from({ length: num }, (_, index) => index);
+
+    useEffect(() => {
+        if (finalWalletTXs && finalWalletTXs.length > 0) {
+            if (filter == "executed") {
+                setFinalWalletTXsToDisplay(finalWalletTXs?.filter((txs) => txs.executed == true));
+            } else if (filter == "all") {
+                setFinalWalletTXsToDisplay(finalWalletTXs);
+            } else if (filter == "pending") {
+                setFinalWalletTXsToDisplay(finalWalletTXs.filter((txs) => txs.executed == false));
+            } else if (filter == "rejected") {
+                refetchWalletDetails().then((res) => {
+                    if (res.isSuccess) {
+                        setFinalWalletTXsToDisplay(
+                            finalWalletTXs.filter(
+                                (txs) => txs.executed == true && txs.rejectionCount >= res.data[2]
+                            )
+                        );
+                    } else {
+                        setFinalWalletTXsToDisplay(null);
+                    }
+                });
+            }
+        }
+    }, [filter]);
 
     useEffect(() => {
         if (walletId) {
@@ -44,6 +71,12 @@ export const WalletTransactionsPage: React.FC = () => {
             }
         }
     }, [walletId]);
+
+    const { refetch: refetchWalletDetails } = useReadContract({
+        address: `0x${String(walletId).substring(2)}`,
+        abi: SIGSAFE_WALLET,
+        functionName: "getWallet",
+    });
 
     const { data: walletTransactionCount, refetch: refetchWalletTransactionCount } =
         useReadContract({
@@ -95,6 +128,7 @@ export const WalletTransactionsPage: React.FC = () => {
             });
 
             setFinalWalletTXs(finalResults);
+            setFinalWalletTXsToDisplay(finalResults);
         }
     }, [walletTransactions]);
 
@@ -120,7 +154,7 @@ export const WalletTransactionsPage: React.FC = () => {
                     Transactions
                 </h1>
                 <Link
-                    to={`/wallets/${walletId}/initiate-transaction`}
+                    to={`/wallets/${walletId}`}
                     className="bg-bright-purple text-white p-3 rounded-full hover:bg-royal-purple transition-colors"
                 >
                     <FaPlus />
@@ -128,11 +162,11 @@ export const WalletTransactionsPage: React.FC = () => {
             </div>
 
             <div className="mb-6 flex justify-center space-x-4">
-                {["all", "pending", "approved", "rejected"].map((status) => (
+                {["all", "pending", "executed", "rejected"].map((status) => (
                     <button
                         key={status}
                         onClick={() =>
-                            setFilter(status as "all" | "pending" | "approved" | "rejected")
+                            setFilter(status as "all" | "pending" | "executed" | "rejected")
                         }
                         className={`
               px-4 py-2 rounded-lg transition-colors
@@ -148,7 +182,7 @@ export const WalletTransactionsPage: React.FC = () => {
                 ))}
             </div>
 
-            {finalWalletTXs && finalWalletTXs.length == 0 ? (
+            {finalWalletTXsToDisplay && finalWalletTXsToDisplay.length == 0 ? (
                 <div className="text-center py-12">
                     <FaWallet className="mx-auto text-6xl text-soft-lilac mb-4" />
                     <p className="text-bright-purple dark:text-light-lavender">
@@ -157,8 +191,12 @@ export const WalletTransactionsPage: React.FC = () => {
                 </div>
             ) : (
                 <div className="space-y-4">
-                    {finalWalletTXs?.map((transaction: Transaction, index: number) => (
-                        <TransactionCard key={index} transaction={transaction} />
+                    {finalWalletTXsToDisplay?.map((transaction: Transaction, index: number) => (
+                        <TransactionCard
+                            key={index}
+                            transaction={transaction}
+                            walletId={walletId}
+                        />
                     ))}
                 </div>
             )}
