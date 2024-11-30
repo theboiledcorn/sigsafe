@@ -62,11 +62,11 @@ export default function AboutPage() {
                             >
                                 <div className="flex items-center mb-4">
                                     {feature.icon}
-                                    <h3 className="text-xl font-semibold ml-4 text-bright-purple">
+                                    <h3 className="text-xl font-bold ml-4 text-bright-purple">
                                         {feature.title}
                                     </h3>
                                 </div>
-                                <p className="text-light-lavender">{feature.description}</p>
+                                <p className="text-light-lavender dark:text-bright-purple">{feature.description}</p>
                             </div>
                         ))}
                     </div>
@@ -93,37 +93,37 @@ export default function AboutPage() {
                     </h2>
                     <div className="bg-white dark:bg-light-lavender p-8 rounded-lg shadow-md">
                         <ul className="space-y-4">
-                            <li className="flex items-start">
+                            {/* <li className="flex items-start">
                                 <BookOpenIcon className="w-6 h-6 text-bright-purple mr-4 mt-1" />
-                                <span className="text-light-lavender">
+                                <span className="text-light-lavender dark:text-bright-purple">
                                     Industry-leading security practices and regular audits
                                 </span>
-                            </li>
+                            </li> */}
                             <li className="flex items-start">
                                 <BookOpenIcon className="w-6 h-6 text-bright-purple mr-4 mt-1" />
-                                <span className="text-light-lavender">
+                                <span className="text-light-lavender dark:text-bright-purple">
                                     User-friendly interface for easy management of complex
                                     transactions
                                 </span>
                             </li>
                             <li className="flex items-start">
                                 <BookOpenIcon className="w-6 h-6 text-bright-purple mr-4 mt-1" />
-                                <span className="text-light-lavender">
-                                    Compatibility with major blockchain networks
+                                <span className="text-light-lavender dark:text-bright-purple">
+                                    Built on Base
                                 </span>
                             </li>
-                            <li className="flex items-start">
+                            {/* <li className="flex items-start">
                                 <BookOpenIcon className="w-6 h-6 text-bright-purple mr-4 mt-1" />
-                                <span className="text-light-lavender">
+                                <span className="text-light-lavender dark:text-bright-purple">
                                     24/7 customer support and comprehensive documentation
                                 </span>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
                 </section>
 
                 <div className="text-center">
-                    <Button className="bg-bright-purple hover:bg-vivid-lavender text-white font-bold py-3 px-6 rounded-full text-lg transition duration-300">
+                    <Button className=" bg-bright-purple hover:bg-vivid-lavender text-white font-bold py-3 px-6 rounded-full text-lg transition duration-300">
                         Get Started Now
                     </Button>
                 </div>

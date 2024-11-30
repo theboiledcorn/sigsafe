@@ -16,7 +16,7 @@ const Loader: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-light-lavender bg-opacity-50">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-light-lavender bg-opacity-50">
             <motion.div
                 initial={{ opacity: 0, scale: 0.7 }}
                 animate={{ opacity: 1, scale: 1 }}

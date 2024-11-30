@@ -1,7 +1,7 @@
 {
     "wallets": [
         {
-            "id": "wallet1",
+            "id": "0xb76a4FEb9c7E7ac257E095553fef8090c00D82c2",
             "address": "0x1234567890123456789012345678901234567890",
             "signatories": [
                 "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -10,7 +10,27 @@
             ],
             "requiredApprovals": 2,
             "balance": "5.7",
-            "transactions": []
+            "transactions": [
+                {
+                    "id": "tx1",
+                    "walletId": "0xb76a4FEb9c7E7ac257E095553fef8090c00D82c2",
+                    "to": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                    "value": "0.5",
+                    "data": "0x",
+                    "type": "sell",
+                    "status": "active",
+                    "initiatedAt": 1689456000,
+                    "executedAt": null,
+                    "executed": false,
+                    "approvalCount": 1,
+                    "rejectionCount": 0,
+                    "signatoryVotes": {
+                        "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": "Approved",
+                        "0x742d35Cc6634C0532925a3b844Bc454e4438f44e": "Unvoted",
+                        "0x514910771AF9Ca656af840dff8026B89A0E7590A": "Unvoted"
+                    }
+                }
+            ]
         },
         {
             "id": "wallet2",
@@ -28,7 +48,7 @@
     "transactions": [
         {
             "id": "tx1",
-            "walletId": "wallet1",
+            "walletId": "0xb76a4FEb9c7E7ac257E095553fef8090c00D82c2",
             "to": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
             "value": "0.5",
             "data": "0x",

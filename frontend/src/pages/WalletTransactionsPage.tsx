@@ -1,27 +1,110 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
 import { FaWallet, FaPlus } from "react-icons/fa";
-import dummyData from "../utils/dummy.json";
 import { TransactionCard } from "../components/TransactionCard";
+import { ethers } from "ethers";
+import { SIGSAFE_WALLET } from "../utils/sigsafe-wallet";
+import { useReadContract, useReadContracts } from "wagmi";
+import { useLoader } from "../context/LoaderContext";
+
+interface Transaction {
+    approvalCount?: bigint;
+    data?: string;
+    executed?: boolean;
+    executedAt?: bigint;
+    initiatedAt?: bigint;
+    metadata?: string;
+    rejectionCount?: bigint;
+    to?: string;
+    transactionId?: string;
+    value: string;
+}
 
 export const WalletTransactionsPage: React.FC = () => {
     const { walletId } = useParams<{ walletId: string }>();
     const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
+    const [isValidURL, setValidURL] = useState(false);
+    const [walletTXCountArray, setWalletTXCountArray] = useState<number[]>([]);
+    const { startLoading, stopLoading } = useLoader();
+    const [finalWalletTXs, setFinalWalletTXs] = useState<Transaction[] | null>(null);
 
-    // Find the specific wallet
-    const wallet = dummyData.wallets.find((w) => w.id === walletId);
+    const createArray = (num: number) => Array.from({ length: num }, (_, index) => index);
 
-    // Filter transactions for this wallet
-    const filteredTransactions = dummyData.transactions
-        .filter((t) => t.walletId === walletId)
-        .filter((t) => filter === "all" || t.status.toLowerCase() === filter);
+    useEffect(() => {
+        if (walletId) {
+            if (!ethers.isAddress(walletId)) {
+                setValidURL(false);
+            } else {
+                setValidURL(true);
+                startLoading();
+                refetchWalletTransactionCount().then(() => {
+                    stopLoading();
+                });
+            }
+        }
+    }, [walletId]);
 
-    if (!wallet) {
+    const { data: walletTransactionCount, refetch: refetchWalletTransactionCount } =
+        useReadContract({
+            address: `0x${String(walletId).substring(2)}`,
+            abi: SIGSAFE_WALLET,
+            functionName: "transactionCount",
+        });
+
+    useEffect(() => {
+        if (walletTransactionCount && Number(walletTransactionCount) > 0) {
+            setWalletTXCountArray(createArray(Number(walletTransactionCount)));
+        }
+    }, [walletTransactionCount]);
+
+    useEffect(() => {
+        if (walletTXCountArray && walletTXCountArray.length > 0) {
+            refetchWalletTransactions().then((res) => {
+                console.log(res);
+            });
+        }
+    }, [walletTXCountArray]);
+
+    const getTXCountFromWallet = walletTXCountArray.map(
+        (count) =>
+            ({
+                address: `0x${String(walletId).substring(2)}`,
+                args: [count],
+                abi: SIGSAFE_WALLET,
+            } as const)
+    );
+
+    const { data: walletTransactions, refetch: refetchWalletTransactions } = useReadContracts({
+        contracts: getTXCountFromWallet.map((address) => ({
+            ...address,
+            address: address.address,
+            abi: address.abi,
+            functionName: "getTransaction",
+        })),
+    });
+
+    useEffect(() => {
+        if (walletTransactions) {
+            const finalResults: Transaction[] = [];
+
+            const txArray = walletTransactions.filter((i) => i.status == "success");
+
+            txArray.map((result: any) => {
+                finalResults.push(result.result);
+            });
+
+            setFinalWalletTXs(finalResults);
+        }
+    }, [walletTransactions]);
+
+    if (isValidURL == false) {
         return (
             <div className="container mx-auto p-6 text-center">
                 <FaWallet className="mx-auto text-6xl text-soft-lilac mb-4" />
-                <p className="text-bright-purple dark:text-light-lavender">Wallet not found</p>
+                <p className="text-bright-purple dark:text-light-lavender">
+                    This page doesn't exist yet.
+                </p>
             </div>
         );
     }
@@ -65,7 +148,7 @@ export const WalletTransactionsPage: React.FC = () => {
                 ))}
             </div>
 
-            {filteredTransactions.length === 0 ? (
+            {finalWalletTXs && finalWalletTXs.length == 0 ? (
                 <div className="text-center py-12">
                     <FaWallet className="mx-auto text-6xl text-soft-lilac mb-4" />
                     <p className="text-bright-purple dark:text-light-lavender">
@@ -74,8 +157,8 @@ export const WalletTransactionsPage: React.FC = () => {
                 </div>
             ) : (
                 <div className="space-y-4">
-                    {filteredTransactions.map((transaction) => (
-                        <TransactionCard key={transaction.id} transaction={transaction} />
+                    {finalWalletTXs?.map((transaction: Transaction, index: number) => (
+                        <TransactionCard key={index} transaction={transaction} />
                     ))}
                 </div>
             )}

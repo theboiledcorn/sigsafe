@@ -41,7 +41,7 @@ const CreateWalletPage: React.FC = () => {
         }
 
         if (!account.isConnected) {
-            showMessage("Please connect your wallet first", "error", "Connection Required");
+            showMessage("Please sign in your wallet first", "error", "Connection Required");
             return;
         }
 

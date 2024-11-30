@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaWallet, FaPlus, FaInfoCircle, FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
+import {
+    FaHome,
+    FaWallet,
+    FaPlus,
+    FaInfoCircle,
+    FaMoon,
+    FaSun,
+    FaBars,
+    FaTimes,
+} from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { WalletWrapper } from "./Wallet";
-// import Logo from '../assets/logo.svg'; // Adjust the import path as needed
+import Logo from "../assets/sigsafe.png"; // Adjust the import path as needed
 
 export const TopNavbar: React.FC = () => {
     const [darkMode, setDarkMode] = useState(document.documentElement.classList.contains("dark"));
@@ -47,20 +56,20 @@ export const TopNavbar: React.FC = () => {
     };
 
     const mobileMenuVariants = {
-        hidden: { 
-            opacity: 0, 
+        hidden: {
+            opacity: 0,
             x: "100%",
             transition: {
-                duration: 0.3
-            }
+                duration: 0.3,
+            },
         },
-        visible: { 
-            opacity: 1, 
+        visible: {
+            opacity: 1,
             x: 0,
             transition: {
-                duration: 0.3
-            }
-        }
+                duration: 0.3,
+            },
+        },
     };
 
     return (
@@ -68,21 +77,26 @@ export const TopNavbar: React.FC = () => {
             <div className="max-w-7xl mx-auto flex justify-between items-center">
                 {/* Logo */}
                 <Link to="/" className="flex items-center space-x-2">
-                    {/* <img 
-                        src={Logo} 
-                        alt="Multi-Sig Wallet Logo" 
-                        className="h-8 w-8 rounded-full"
-                    /> */}
-                    {/* <span className="text-bright-purple dark:text-soft-lilac font-bold text-xl hidden md:inline"> */}
+                    <p className="bg-white rounded-xl p-[0.1rem]">
+                        <img
+                            src={Logo}
+                            alt="Multi-Sig Wallet Logo"
+                            className="h-8 w-8 rounded-full"
+                        />
+                    </p>
                     <span className="text-bright-purple dark:text-soft-lilac font-bold text-xl md:inline">
-                        SigSafe
+                        Sigsafe
                     </span>
                 </Link>
 
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex space-x-6 items-center">
                     {navItems.map((item) => (
-                        <motion.div key={item.path} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                        <motion.div
+                            key={item.path}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                        >
                             <Link
                                 to={item.path}
                                 className="flex flex-col items-center text-bright-purple dark:text-soft-lilac"
@@ -99,7 +113,7 @@ export const TopNavbar: React.FC = () => {
                     <WalletWrapper
                         text="Sign In"
                         className="bg-bright-purple text-white px-6 py-2 rounded-full 
-                            flex items-center space-x-2 hover:bg-royal-purple transition-colors"
+                            flex items-center space-x-2 hover:bg-royal-purple transition-colors dark:bg-light-lavender dark:text-bright-purple"
                         withWalletAggregator={true}
                     />
                     {/* <motion.button
@@ -162,7 +176,7 @@ export const TopNavbar: React.FC = () => {
                                 <WalletWrapper
                                     text="Sign In"
                                     className="bg-bright-purple text-white px-6 py-2 rounded-full 
-                                        flex items-center justify-center space-x-2 hover:bg-royal-purple transition-colors"
+                                        flex items-center justify-center space-x-2 hover:bg-royal-purple transition-colors dark:bg-light-lavender dark:text-bright-purple"
                                     withWalletAggregator={true}
                                 />
                             </div>

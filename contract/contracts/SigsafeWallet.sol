@@ -28,7 +28,7 @@ contract SigsafeWallet is ReentrancyGuard {
     uint immutable NO_OF_REQUIRED_APPROVALS;
     uint immutable NO_OF_REQUIRED_REJECTIONS;
     mapping(uint => Transaction) transaction;
-    uint transactionCount;
+    uint public transactionCount;
 
     address[] SIGNATORIES;
     mapping(address => bool) public isSignatory;

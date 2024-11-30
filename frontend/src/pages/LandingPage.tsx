@@ -36,7 +36,7 @@ const LandingPage: React.FC = () => {
                     transition={{ delay: 0.2 }}
                     className="text-3xl sm:text-5xl font-extrabold text-royal-purple dark:text-soft-lilac mb-6"
                 >
-                    SigsafeWallet
+                    Sigsafe
                 </motion.h1>
                 <p className="text-lg sm:text-xl text-bright-purple dark:text-light-lavender max-w-3xl">
                     Secure, collaborative multi-signature wallet management for teams and
