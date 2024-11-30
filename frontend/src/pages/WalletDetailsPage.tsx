@@ -1,7 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link, useParams } from "react-router-dom";
-import { FaWallet, FaPlus, FaCoins } from "react-icons/fa";
+import { FaWallet, FaCoins } from "react-icons/fa";
+// import { FaWallet, FaPlus, FaCoins } from "react-icons/fa";
 import dummyData from "../utils/dummy.json";
 import { TransactionCard } from "../components/TransactionCard";
 

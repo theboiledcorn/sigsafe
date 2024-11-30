@@ -4,7 +4,8 @@ import { Button } from "../components/Button";
 import { formatDate } from "../utils/utils";
 
 export const TransactionDetailsPage: React.FC = () => {
-    const { walletId, transactionId } = useParams<{ walletId: string; transactionId: string }>();
+    // const { walletId, transactionId } = useParams<{ walletId: string; transactionId: string }>();
+    const { transactionId } = useParams<{ walletId: string; transactionId: string }>();
 
     const [transaction, setTransaction] = useState({
         id: transactionId,
