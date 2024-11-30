@@ -16,7 +16,7 @@ export function Providers(props: { children: ReactNode }) {
         <WagmiProvider config={useWagmiConfig()}>
             <QueryClientProvider client={queryClient}>
                 <OnchainKitProvider
-                    apiKey={import.meta.env.VITE_PUBLIC_ONCHAINKIT_API_KEY}
+                    apiKey={import.meta.env.VITE_PUBLIC_ONCHAINKIT_API}
                     chain={baseSepolia}
                 >
                     <RainbowKitProvider modalSize="compact" theme={darkTheme()}>
