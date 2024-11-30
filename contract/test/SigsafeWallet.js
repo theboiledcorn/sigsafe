@@ -42,7 +42,7 @@ describe("SigsafeWallet", function () {
         const { accountSix, SigsafeWallet, sigsafeWallet } = await loadFixture(deployFixture);
 
         expect(
-            sigsafeWallet.connect(accountSix).initiateTransaction(ZERO_ADDRESS, 0, "0x")
+            sigsafeWallet.connect(accountSix).initiateTransaction(ZERO_ADDRESS, 0, "0x", "0x")
         ).to.be.revertedWithCustomError(SigsafeWallet, "NotASignatoryForThisWallet");
     });
 
@@ -51,7 +51,7 @@ describe("SigsafeWallet", function () {
 
         const wallet = await sigsafeWallet.getWallet();
 
-        await expect(sigsafeWallet.connect(accountTwo).initiateTransaction(ZERO_ADDRESS, 0, "0x")).to.emit(
+        await expect(sigsafeWallet.connect(accountTwo).initiateTransaction(ZERO_ADDRESS, 0, "0x", "0x")).to.emit(
             sigsafeWallet,
             "TransactionInitiated"
         );
@@ -80,7 +80,7 @@ describe("SigsafeWallet", function () {
     it("should vote, revote & reset vote on a transaction for signatory", async function () {
         const { accountSix, SigsafeWallet, sigsafeWallet, accountTwo, accountThree } = await loadFixture(deployFixture);
 
-        await sigsafeWallet.connect(accountTwo).initiateTransaction(ZERO_ADDRESS, 0, "0x");
+        await sigsafeWallet.connect(accountTwo).initiateTransaction(ZERO_ADDRESS, 0, "0x", "0x");
 
         const wallet = await sigsafeWallet.getWallet();
 
@@ -111,7 +111,7 @@ describe("SigsafeWallet", function () {
     it("should fail to finalize a transaction without minimum approvals", async function () {
         const { accountSix, SigsafeWallet, sigsafeWallet, accountTwo, accountThree } = await loadFixture(deployFixture);
 
-        await sigsafeWallet.connect(accountTwo).initiateTransaction(ZERO_ADDRESS, 0, "0x");
+        await sigsafeWallet.connect(accountTwo).initiateTransaction(ZERO_ADDRESS, 0, "0x", "0x");
 
         const wallet = await sigsafeWallet.getWallet();
         const txID = wallet[3] - BigInt(1);
@@ -129,7 +129,7 @@ describe("SigsafeWallet", function () {
             deployFixture
         );
 
-        await sigsafeWallet.connect(accountTwo).initiateTransaction(ZERO_ADDRESS, 0, "0x");
+        await sigsafeWallet.connect(accountTwo).initiateTransaction(ZERO_ADDRESS, 0, "0x", "0x");
 
         const wallet = await sigsafeWallet.getWallet();
         const txID = wallet[3] - BigInt(1);
@@ -161,7 +161,7 @@ describe("SigsafeWallet", function () {
 
         const sigsafeBalanceBefore = await ethers.provider.getBalance(sigsafeWallet.target);
 
-        await sigsafeWallet.connect(accountTwo).initiateTransaction(accountSix.address, ethers.parseEther("100"), "0x");
+        await sigsafeWallet.connect(accountTwo).initiateTransaction(accountSix.address, ethers.parseEther("100"), "0x", "0x");
 
         const wallet = await sigsafeWallet.getWallet();
         const txID = wallet[3] - BigInt(1);
@@ -220,7 +220,7 @@ describe("SigsafeWallet", function () {
             signatories,
         ]);
 
-        await sigsafeWallet.connect(accountTwo).initiateTransaction(sigsafeFactory.target, 0, encodedData);
+        await sigsafeWallet.connect(accountTwo).initiateTransaction(sigsafeFactory.target, 0, encodedData, "0x");
 
         const wallet = await sigsafeWallet.getWallet();
         const txID = wallet[3] - BigInt(1);
