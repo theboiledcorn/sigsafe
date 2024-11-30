@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { formatDate } from "../utils/utils";
 import { ethers } from "ethers";
-import { TransactionDetailsModal } from "./transactionDetailsModal";
+// import { TransactionDetailsModal } from "./transactionDetailsModal";
 import { useAccount, useWriteContract } from "wagmi";
 import { SIGSAFE_WALLET } from "../utils/sigsafe-wallet";
 import { useLoader } from "../context/LoaderContext";
 import { useMessageModal } from "../context/MessageModalContext";
 import { parseContractError } from "../utils/errors";
+import { TransactionDetailsModal } from "./TransactionDetailsModal";
 
 interface TransactionCardProps {
     transaction: {
