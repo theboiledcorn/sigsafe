@@ -148,7 +148,7 @@ export const TransactionDetailsModal: React.FC<TransactionDetailsModalProps> = (
                                                     <strong>Amount:</strong>{" "}
                                                     {Number(
                                                         ethers.formatUnits(transaction.value)
-                                                    ).toFixed(2)}
+                                                    ).toFixed(5)}
                                                 </p>
                                             </div>
                                             <div className="flex justify-between items-start">

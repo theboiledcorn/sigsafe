@@ -174,7 +174,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({ transaction, w
                     </p>
                     <p className="text-sm text-royal-purple dark:text-bright-purple">
                         <strong>Amount:</strong>{" "}
-                        {Number(ethers.formatUnits(transaction.value)).toFixed(2)}
+                        {Number(ethers.formatUnits(transaction.value)).toFixed(5)}
                     </p>
                 </div>
 

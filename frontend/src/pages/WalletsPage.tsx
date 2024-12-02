@@ -148,7 +148,7 @@ const WalletsPage: React.FC = () => {
                             <div>
                                 <p className="text-sm text-royal-purple dark:text-soft-lilac">
                                     Balance:{" "}
-                                    {`${Number(ethers.formatUnits(wallet[1], 18)).toFixed(2)}`} ETH
+                                    {`${Number(ethers.formatUnits(wallet[1], 18)).toFixed(5)}`} ETH
                                 </p>
                                 <p className="text-sm text-bright-purple dark:text-light-lavender">
                                     Signatories: {wallet[0][0].length}

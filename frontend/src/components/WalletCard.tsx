@@ -27,7 +27,7 @@ export const WalletCard: React.FC<WalletCardProps> = ({ wallet }) => {
             </div>
             <div>
                 <p className="text-sm text-royal-purple dark:text-soft-lilac">
-                    Balance: {wallet.balance.toFixed(4)} ETH
+                    Balance: {wallet.balance.toFixed(5)} ETH
                 </p>
                 <p className="text-sm text-bright-purple dark:text-light-lavender">
                     Signatories: {wallet.signatories.length}

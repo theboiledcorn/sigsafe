@@ -129,7 +129,7 @@ export const WalletDetailsPage: React.FC = () => {
                                     <span className="font-bold text-royal-purple dark:text-soft-lilac">
                                         {`${Number(
                                             ethers.formatUnits(walletResults[1], 18)
-                                        ).toFixed(2)}`}{" "}
+                                        ).toFixed(5)}`}{" "}
                                         ETH
                                     </span>
                                 </div>
