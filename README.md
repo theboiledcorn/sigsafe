@@ -45,7 +45,7 @@ Sigsafe is a decentralized multi-signature wallet built on the Base (Sepolia) bl
 
 ```bash
 # Clone the repository
-git clone https://github.com/peppyeben/sigsafe
+git clone https://github.com/theboiledcorn/sigsafe
 
 # Navigate to the contract folder
 cd contract
